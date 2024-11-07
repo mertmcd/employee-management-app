@@ -1,4 +1,7 @@
 import { LitElement, html, css } from 'lit';
+import { Router } from '@vaadin/router';
+import './ShowNotification.js';
+import employeeService from '../services/employeeService.js';
 
 class EmployeeList extends LitElement {
   static get properties() {
@@ -37,8 +40,11 @@ class EmployeeList extends LitElement {
   }
 
   loadEmployees() {
-    const employees = JSON.parse(localStorage.getItem('employees')) || [];
-    this.employees = employees;
+    this.employees = employeeService.loadEmployees();
+  }
+
+  navigateToEditPage(employee) {
+    Router.go(`/edit-employee:${employee.id}`);
   }
 
   deleteEmployee(id) {
@@ -54,15 +60,15 @@ class EmployeeList extends LitElement {
       localStorage.setItem('employees', JSON.stringify(employees));
       this.loadEmployees();
       this.showConfirmDialog = false;
+
+      const notification = document.createElement('notification-message');
+      notification.message = 'Employee deleted successfully!';
+      document.body.appendChild(notification);
     }
   }
 
   cancelDelete() {
     this.showConfirmDialog = false;
-  }
-
-  editEmployee(employee) {
-    this.dispatchEvent(new CustomEvent('edit-employee', { detail: employee, bubbles: true, composed: true }));
   }
 
   updateFilter(e, field) {
@@ -183,7 +189,7 @@ class EmployeeList extends LitElement {
                     <td>${emp.department}</td>
                     <td>${emp.position}</td>
                     <td class="actions-container">
-                      <button @click="${() => this.editEmployee(emp)}">Edit</button>
+                      <button @click="${() => this.navigateToEditPage(emp)}">Edit</button>
                       <button @click="${() => this.deleteEmployee(emp.id)}">Delete</button>
                     </td>
                   </tr>

@@ -12,25 +12,6 @@ class App extends LitElement {
 
   constructor() {
     super();
-    this.employees = [];
-    this.selectedEmployee = null;
-  }
-
-  addOrUpdateEmployee(e) {
-    const employee = e.detail;
-    if (employee.id) {
-      this.employees = this.employees.map(emp => emp.id === employee.id ? employee : emp);
-    } else {
-      employee.id = Date.now();
-      this.employees = [...this.employees, employee];
-    }
-    this.selectedEmployee = null;
-    Router.go('/');
-  }
-
-  editEmployee(e) {
-    this.selectedEmployee = e.detail;
-    Router.go('/edit-employee');
   }
 
   firstUpdated() {
@@ -38,7 +19,7 @@ class App extends LitElement {
     router.setRoutes([
       { path: '/', component: 'employee-list' },
       { path: '/add-employee', component: 'employee-form' },
-      { path: '/edit-employee', component: 'employee-form' },
+      { path: '/edit-employee:id', component: 'employee-form' },
     ]);
   }
 

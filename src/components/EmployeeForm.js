@@ -1,72 +1,83 @@
 import { LitElement, html, css } from 'lit';
 import { Router } from '@vaadin/router';
+import './ShowNotification.js';
+import employeeService from '../services/employeeService.js';
 
 class EmployeeForm extends LitElement {
-    static get properties() {
-        return {
-          employee: { type: Object },
-        };
-      }
+  static get properties() {
+      return {
+        employee: { type: Object },
+        employees: { type: Array },
+      };
+    }
     
-      constructor() {
-        super();
-        this.employee = {};
-      }
+  constructor() {
+    super();
+    this.employee = {};
+    this.employees = [];
+  }
 
-      connectedCallback() {
-        super.connectedCallback();
-        this.addEventListener('edit-employee', (event) => {
-          this.employee = { ...event.detail };
-        });
-      }
+  connectedCallback() {
+    super.connectedCallback();
+    this.loadEmployees();
+  }
 
-      saveEmployee() {
-        const formData = new FormData(this.shadowRoot.querySelector('form'));
-        const employeeData = {};
-        formData.forEach((value, key) => {
-          employeeData[key] = value;
-        });
-        
-        let employees = JSON.parse(localStorage.getItem('employees')) || [];
-      
-        if (this.employee.id) {
-          employeeData.id = this.employee.id;
-          employees = employees.map(emp => emp.id === this.employee.id ? employeeData : emp);
-        } else {
-          employeeData.id = Date.now();
-          employees.push(employeeData);
+  firstUpdated() {
+    this.findEmployeeById();
+  }
+
+  findEmployeeById() {
+    const id = parseInt(location.href.split(':').pop());
+    const employee = this.employees.find(emp => emp.id === id);
+    this.fillFormDataById(employee);
+  }
+
+  fillFormDataById(employee) {
+    if (employee) {
+      this.employee = employee;
+      const form = this.shadowRoot.querySelector('form');
+      for (const key in employee) {
+        const input = form.querySelector(`[name="${key}"]`);
+        if (input) {
+          input.value = employee[key];
         }
-      
-        localStorage.setItem('employees', JSON.stringify(employees));
-      
-        this.dispatchEvent(new CustomEvent('save-employee', { detail: employeeData }));
-      
-        this.employee = {};
-      
-        this.showSuccessMessage();
-
-        Router.go('/');
       }
-      
+    }
+  }
 
-  showSuccessMessage() {
-    const message = document.createElement('div');
-    message.textContent = 'Your employee record has been saved successfully!';
-    message.style.position = 'fixed';
-    message.style.top = '20px';
-    message.style.right = '20px';
-    message.style.backgroundColor = '#4CAF50';
-    message.style.color = 'white';
-    message.style.padding = '10px';
-    message.style.borderRadius = '5px';
-    message.style.zIndex = '1000';
-    message.style.fontWeight = 'bold';
+  loadEmployees() {
+    this.employees = employeeService.loadEmployees();
+  }
+
+  saveOrEditEmployee() {
+    const form = this.shadowRoot.querySelector('form');
+    const formData = new FormData(form);
+
+    const employee = {
+      id: this.employee.id || Date.now(),
+      firstName: formData.get('firstName'),
+      lastName: formData.get('lastName'),
+      dateOfEmployment: formData.get('dateOfEmployment'),
+      dateOfBirth: formData.get('dateOfBirth'),
+      phone: formData.get('phone'),
+      email: formData.get('email'),
+      department: formData.get('department'),
+      position: formData.get('position'),
+    };
+  
+    let employees = JSON.parse(localStorage.getItem('employees')) || [];
+    if (this.employee.id) {
+      employees = employees.map(emp => emp.id === employee.id ? employee : emp);
+    } else {
+      employees.push(employee);
+    }
+
+    const notification = document.createElement('notification-message');
+    notification.message = this.employee.id ? 'Employee updated successfully!' : 'Employee added successfully!';
+    document.body.appendChild(notification);
     
-    document.body.appendChild(message);
-
-    setTimeout(() => {
-      message.remove();
-    }, 3000);
+    localStorage.setItem('employees', JSON.stringify(employees));
+    Router.go('/');
   }
 
   render() {
@@ -91,7 +102,8 @@ class EmployeeForm extends LitElement {
             <option value="Senior" ?selected="${this.employee.position === 'Senior'}">Senior</option>
           </select>
         </label>
-        <button type="button" @click="${this.saveEmployee}">Save Employee</button>
+        <button type="button" @click="${this.saveOrEditEmployee}">Save</button>
+
       </form>
     `;
   }
