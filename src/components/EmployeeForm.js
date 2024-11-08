@@ -8,6 +8,8 @@ class EmployeeForm extends LitElement {
     return {
       employee: { type: Object },
       employees: { type: Array },
+      showConfirmDialog: { type: Boolean },
+      employeeToEdit: { type: Object },
     };
   }
 
@@ -15,6 +17,8 @@ class EmployeeForm extends LitElement {
     super();
     this.employee = {};
     this.employees = [];
+    this.showConfirmDialog = false;
+    this.employeeToEdit = null;
   }
 
   connectedCallback() {
@@ -101,11 +105,32 @@ class EmployeeForm extends LitElement {
     document.body.appendChild(notification);
   }
 
+  openConfirmDialog() {
+    this.showConfirmDialog = true;
+  }
+
+  confirmEdit() {
+    this.showConfirmDialog = false;
+    this.performSaveOrEdit();
+  }
+
+  cancelEdit() {
+    this.showConfirmDialog = false;
+  }
+
   saveOrEditEmployee() {
     if (!this.validateForm()) {
       return;
     }
+    
+    if (this.employee.id) {
+      this.openConfirmDialog();
+    } else {
+      this.performSaveOrEdit();
+    }
+  }
 
+  performSaveOrEdit() {
     const form = this.shadowRoot.querySelector('form');
     const formData = new FormData(form);
 
@@ -128,9 +153,7 @@ class EmployeeForm extends LitElement {
       employees.push(employee);
     }
 
-    const notification = document.createElement('notification-message');
-    notification.message = this.employee.id ? 'Employee updated successfully!' : 'Employee added successfully!';
-    document.body.appendChild(notification);
+    this.showFieldNotification('Employee saved successfully!', 'success');
 
     localStorage.setItem('employees', JSON.stringify(employees));
     Router.go('/');
@@ -167,6 +190,18 @@ class EmployeeForm extends LitElement {
       <div class='save-button'>
         <button type="button" @click="${this.saveOrEditEmployee}">Save</button>
       </div>
+
+      ${this.showConfirmDialog
+        ? html`
+          <div class="overlay">
+            <div class="confirm-dialog">
+              <p>Are you sure you want to edit <strong>${this.employee.firstName} ${this.employee.lastName}</strong>?</p>
+              <button class="-proceed" @click="${this.confirmEdit}">Proceed</button>
+              <button class="-cancel" @click="${this.cancelEdit}">Cancel</button>
+            </div>
+          </div>
+          `
+        : ''}
     </div>
     `;
   }
@@ -244,7 +279,6 @@ button {
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  text-transform: uppercase;
   font-weight: 600;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   width: 100%;
@@ -264,6 +298,83 @@ button:disabled {
   display: flex;
   justify-content: center;
   margin-top: 1.5rem;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.confirm-dialog {
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.4rem 1rem rgba(0, 0, 0, 0.15);
+  max-width: 90%;
+  width: 400px;
+  text-align: center;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.confirm-dialog p {
+  margin-bottom: 1.5rem;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.confirm-dialog button {
+  padding: 0.5rem 1rem;
+  margin: 0.5rem;
+  border-radius: 0.3rem;
+  font-weight: 500;
+  transition: background-color 0.3s, color 0.3s, transform 0.2s;
+}
+
+.confirm-dialog button:hover {
+  transform: scale(1.05);
+}
+
+.confirm-dialog button.-proceed {
+  background-color: var(--primary-orange-color);
+  color: white;
+  border: none;
+  padding: 0.4rem 0.6rem;
+  width: auto;
+}
+
+.confirm-dialog button.-proceed:hover {
+  background-color: var(--primary-orange-hover-color);
+}
+
+.confirm-dialog button.-cancel {
+  background-color: rgba(255, 255, 255, 0.85);
+  color: var(--primary-orange-color);
+  border: 0.1rem solid var(--primary-orange-color);
+  padding: 0.4rem 0.6rem;
+  width: auto;
+}
+
+.confirm-dialog button.-cancel:hover {
+  background-color: rgba(200, 200, 200, 0.3);
+  color: var(--primary-orange-hover-color);
 }
 
 @media (max-width: 768px) {
