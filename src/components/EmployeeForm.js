@@ -59,41 +59,42 @@ class EmployeeForm extends LitElement {
     const email = form.querySelector('[name="email"]').value;
 
     if (!firstName || firstName.length < 2) {
-      this.showFieldNotification('First Name must be at least 2 characters.');
+      this.showFieldNotification('First Name must be at least 2 characters.', 'error');
       return false;
     }
 
     if (!lastName || lastName.length < 2) {
-      this.showFieldNotification('Last Name must be at least 2 characters.');
+      this.showFieldNotification('Last Name must be at least 2 characters.', 'error');
       return false;
     }
 
     if (!dateOfEmployment || isNaN(Date.parse(dateOfEmployment))) {
-      this.showFieldNotification('Please provide a valid Date of Employment.');
+      this.showFieldNotification('Please provide a valid Date of Employment.', 'error');
       return false;
     }
 
     if (!dateOfBirth || isNaN(Date.parse(dateOfBirth))) {
-      this.showFieldNotification('Please provide a valid Date of Birth.');
+      this.showFieldNotification('Please provide a valid Date of Birth.', 'error');
       return false;
     }
 
     if (!phone || !/^\d{10}$/.test(phone)) {
-      this.showFieldNotification('Phone must be a 10-digit number.');
+      this.showFieldNotification('Phone must be a 10-digit number.', 'error');
       return false;
     }
 
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      this.showFieldNotification('Please provide a valid email address.');
+      this.showFieldNotification('Please provide a valid email address.', 'error');
       return false;
     }
 
     return true;
   }
 
-  showFieldNotification(message) {
+  showFieldNotification(message, type = 'success') {
     const notification = document.createElement('notification-message');
     notification.message = message;
+    notification.type = type;
     document.body.appendChild(notification);
   }
 
@@ -158,11 +159,11 @@ class EmployeeForm extends LitElement {
             <option value="Senior" ?selected="${this.employee.position === 'Senior'}">Senior</option>
           </select>
         </label>
-        <div class='save-button'>
-          <button type="button" @click="${this.saveOrEditEmployee}">Save</button>
-        </div>
-
+        
       </form>
+      <div class='save-button'>
+        <button type="button" @click="${this.saveOrEditEmployee}">Save</button>
+      </div>
     </div>
     `;
   }
@@ -265,6 +266,18 @@ button:disabled {
 @media (max-width: 768px) {
   .employee-form-container {
     width: 95vw;
+
+  }
+
+  .save-button {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 90%;
+    background-color: var(--main-bg-color);
+    z-index: 1000;
+    margin: 1rem;
+    display: flex;
   }
 
   form {

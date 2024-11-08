@@ -44,9 +44,6 @@ class NotificationMessage extends LitElement {
     .error {
       background-color: #f44336;
     }
-    .info {
-      background-color: #2196F3;
-    }
   `;
 }
 

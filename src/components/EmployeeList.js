@@ -80,10 +80,15 @@ class EmployeeList extends LitElement {
       this.loadEmployees();
       this.showConfirmDialog = false;
 
-      const notification = document.createElement('notification-message');
-      notification.message = 'Employee deleted successfully!';
-      document.body.appendChild(notification);
+      this.showFieldNotification('Employee deleted successfully!', 'success');
     }
+  }
+
+  showFieldNotification(message, type = 'success') {
+    const notification = document.createElement('notification-message');
+    notification.message = message;
+    notification.type = type;
+    document.body.appendChild(notification);
   }
 
   cancelDelete() {
