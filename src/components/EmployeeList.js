@@ -40,6 +40,7 @@ class EmployeeList extends LitElement {
   }
 
   loadEmployees() {
+    this.currentPage = Number(localStorage.getItem('currentPage')) || 1;
     this.employees = employeeService.loadEmployees();
   }
 
@@ -165,13 +166,13 @@ class EmployeeList extends LitElement {
     </tr>
   </thead>
           <tbody>
-            ${this.paginatedEmployees.length === 0 
-              ? html`
+            ${this.paginatedEmployees.length === 0
+        ? html`
                   <tr class="no-records">
                     <td colspan="9" class="no-records-message">Employee not found</td>
                   </tr>
-                ` 
-              : this.paginatedEmployees.map(emp => html`
+                `
+        : this.paginatedEmployees.map(emp => html`
                   <tr>
                     <td class='first-name'>${emp.firstName}</td>
                     <td class='last-name'>${emp.lastName}</td>
@@ -199,28 +200,30 @@ class EmployeeList extends LitElement {
         </table>
   
         <div class="pagination-controls">
-          <button @click="${this.goToPreviousPage}" ?disabled="${this.currentPage === 1}">
+          <button class='prev' @click="${this.goToPreviousPage}" ?disabled="${this.currentPage === 1}">
             Previous
           </button>
           <span>Page ${this.currentPage} of ${this.totalPages}</span>
-          <button @click="${this.goToNextPage}" ?disabled="${this.currentPage === this.totalPages}">
+          <button class='next' @click="${this.goToNextPage}" ?disabled="${this.currentPage === this.totalPages}">
             Next
           </button>
         </div>
         ${this.showConfirmDialog
-          ? html`
+        ? html`
+          <div class="overlay">
             <div class="confirm-dialog">
               <p>Are you sure you want to delete ${this.employeeToDelete?.firstName} ${this.employeeToDelete?.lastName}?</p>
               <button class="-proceed" @click="${this.confirmDelete}">Proceed</button>
               <button class="-cancel" @click="${this.cancelDelete}">Cancel</button>
             </div>
+          </div>
           `
-          : ''
-        }
+        : ''
+      }
       </div>
     `;
   }
-  
+
   static styles = css`
   * {
     margin: 0;
@@ -236,13 +239,14 @@ class EmployeeList extends LitElement {
     font-weight: 400;
   }
 
-  .employee-list-title {
+.employee-list-title {
     margin: 1rem;
   }
 
 .employee-list-container {
   overflow-x: auto;
   padding: 1rem;
+  margin: 0rem 1rem;
   background-color: var(--primary-white-color);
   border-radius: 0.2rem;
 }
@@ -324,16 +328,16 @@ class EmployeeList extends LitElement {
 
 .pagination-controls button {
   padding: 0.5rem 1rem;
-  background-color: var(--secondary-orange-color);
-  color: white;
-  border: none;
+  background-color: var(--primary-orange-color);
+  color: var(--primary-white-color);
   cursor: pointer;
   border-radius: 4px;
   transition: background-color 0.3s ease;
 }
 
 .pagination-controls button:hover {
-  background-color: #e67e22; /* Hover rengi */
+  background-color: var(--primary-orange-hover-color);
+  color: var(--primary-white-color);
 }
 
 .pagination-controls button:disabled {
@@ -343,7 +347,7 @@ class EmployeeList extends LitElement {
 
 @media (max-width: 768px) {
   .employee-list-table {
-    grid-template-columns: repeat(3, 1fr); /* Küçük ekranlarda sadece 3 sütun göster */
+    grid-template-columns: repeat(3, 1fr);
   }
 
   .employee-list-table th,
@@ -359,7 +363,7 @@ class EmployeeList extends LitElement {
 
   button {
     background-color: var(--primary-orange-color);
-    color: white;
+    color: var(--primary-white-color);
     padding: 0.4rem 0.6rem;
     border: none;
     border-radius: 0.2rem;
@@ -373,8 +377,15 @@ class EmployeeList extends LitElement {
     color: var(--primary-orange-color);
   }
 
+  .action-button:hover {
+    background-color: var(--primary-orange-color);
+    color: var(--primary-white-color);
+  }
+
+
   button:hover {
-    background-color: var(--primary-orange-hover-color);
+    background-color: var(--primary-white-color);
+    color: var(--primary-orange-color);
   }
 
   button.delete {
@@ -397,45 +408,82 @@ class EmployeeList extends LitElement {
     font-size: 1rem;
   }
 
-  .confirm-dialog {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: white;
-    padding: 1rem;
-    border: 0.1rem solid var(--border-gray-color);
-    box-shadow: 0 0.2rem 0.4rem rgba(0, 0, 0, 0.1);
-  }
+  .overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
 
-  .confirm-dialog button {
-    margin: 0.25rem;
-    background-color: white;
-    border: 0.05rem solid var(--border-gray-color);
-  }
+.confirm-dialog {
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.4rem 1rem rgba(0, 0, 0, 0.15);
+  max-width: 90%;
+  width: 400px;
+  text-align: center;
+  animation: fadeIn 0.3s ease-in-out;
+}
 
-  .confirm-dialog button.-proceed {
-    background-color: var(--primary-orange-color);
-    color: white;
-  }
+.confirm-dialog p {
+  margin-bottom: 1.5rem;
+}
 
-  .confirm-dialog button.-proceed:hover {
-    background-color: var(--primary-orange-hover-color);
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20%);
   }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
-  .confirm-dialog button.-cancel {
-    background-color: white;
-    color: var(--primary-orange-color);
-    border: 0.05rem solid var(--border-orange-color);
-  }
+.confirm-dialog button {
+  padding: 0.5rem 1rem;
+  margin: 0.5rem;
+  border-radius: 0.3rem;
+  font-weight: 500;
+  transition: background-color 0.3s, color 0.3s, transform 0.2s;
+}
 
-  .confirm-dialog button.-cancel:hover {
-    background-color: #ccc;
-  }
+.confirm-dialog button:hover {
+  transform: scale(1.05);
+}
+
+.confirm-dialog button.-proceed {
+  background-color: var(--primary-orange-color);
+  color: white;
+  border: none;
+}
+
+.confirm-dialog button.-proceed:hover {
+  background-color: var(--primary-orange-hover-color);
+}
+
+.confirm-dialog button.-cancel {
+  background-color: rgba(255, 255, 255, 0.85);
+  color: var(--primary-orange-color);
+  border: 0.1rem solid var(--primary-orange-color);
+}
+
+.confirm-dialog button.-cancel:hover {
+  background-color: rgba(200, 200, 200, 0.3);
+  color: var(--primary-orange-hover-color);
+}
 
   @media (max-width: 768px) {
     .employee-list-table {
-    grid-template-columns: repeat(3, 1fr); /* Küçük ekranlarda sadece 3 sütun göster */
+    grid-template-columns: repeat(3, 1fr);
   }
 
   .employee-list-table th,
@@ -443,7 +491,6 @@ class EmployeeList extends LitElement {
     font-size: 0.9rem;
   }
 
-  /* Arama inputlarını daha uygun bir şekilde yerleştir */
   .employee-list-table input[type="text"] {
     font-size: 0.8rem;
   }
@@ -459,9 +506,6 @@ class EmployeeList extends LitElement {
     }
   }
 `;
-
-
-
 }
 
 customElements.define('employee-list', EmployeeList);

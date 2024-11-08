@@ -57,7 +57,7 @@ class App extends LitElement {
     --secondary-gray-color: #616161;
     --primary-orange-color: #ff6a00;
     --secondary-orange-color: #ffbe80;
-    --primary-orange-hover-color: #ff7b00;
+    --primary-orange-hover-color: #c45f00;
     --primary-button-color: #d1d1d1;
     --primary-button-hover-color: #e1e1e1;
     --border-gray-color: #d1d1d1;
@@ -65,10 +65,7 @@ class App extends LitElement {
   }
 
   navigation-menu {
-    background-color: #333;
     color: var(--primary-white-color);
-    padding: 1rem;
-    background-color: var(--main-bg-color);
   }
 
   #outlet {
@@ -78,8 +75,6 @@ class App extends LitElement {
     background-color: var(--main-bg-color);
   }
 `;
-
-
 }
 
 customElements.define('employee-management-app', App);

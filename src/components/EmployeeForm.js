@@ -5,12 +5,12 @@ import employeeService from '../services/employeeService.js';
 
 class EmployeeForm extends LitElement {
   static get properties() {
-      return {
-        employee: { type: Object },
-        employees: { type: Array },
-      };
-    }
-    
+    return {
+      employee: { type: Object },
+      employees: { type: Array },
+    };
+  }
+
   constructor() {
     super();
     this.employee = {};
@@ -49,7 +49,59 @@ class EmployeeForm extends LitElement {
     this.employees = employeeService.loadEmployees();
   }
 
+  validateForm() {
+    const form = this.shadowRoot.querySelector('form');
+    const firstName = form.querySelector('[name="firstName"]').value;
+    const lastName = form.querySelector('[name="lastName"]').value;
+    const dateOfEmployment = form.querySelector('[name="dateOfEmployment"]').value;
+    const dateOfBirth = form.querySelector('[name="dateOfBirth"]').value;
+    const phone = form.querySelector('[name="phone"]').value;
+    const email = form.querySelector('[name="email"]').value;
+
+    if (!firstName || firstName.length < 2) {
+      this.showFieldNotification('First Name must be at least 2 characters.');
+      return false;
+    }
+
+    if (!lastName || lastName.length < 2) {
+      this.showFieldNotification('Last Name must be at least 2 characters.');
+      return false;
+    }
+
+    if (!dateOfEmployment || isNaN(Date.parse(dateOfEmployment))) {
+      this.showFieldNotification('Please provide a valid Date of Employment.');
+      return false;
+    }
+
+    if (!dateOfBirth || isNaN(Date.parse(dateOfBirth))) {
+      this.showFieldNotification('Please provide a valid Date of Birth.');
+      return false;
+    }
+
+    if (!phone || !/^\d{10}$/.test(phone)) {
+      this.showFieldNotification('Phone must be a 10-digit number.');
+      return false;
+    }
+
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      this.showFieldNotification('Please provide a valid email address.');
+      return false;
+    }
+
+    return true;
+  }
+
+  showFieldNotification(message) {
+    const notification = document.createElement('notification-message');
+    notification.message = message;
+    document.body.appendChild(notification);
+  }
+
   saveOrEditEmployee() {
+    if (!this.validateForm()) {
+      return;
+    }
+
     const form = this.shadowRoot.querySelector('form');
     const formData = new FormData(form);
 
@@ -64,7 +116,7 @@ class EmployeeForm extends LitElement {
       department: formData.get('department'),
       position: formData.get('position'),
     };
-  
+
     let employees = JSON.parse(localStorage.getItem('employees')) || [];
     if (this.employee.id) {
       employees = employees.map(emp => emp.id === employee.id ? employee : emp);
@@ -75,14 +127,17 @@ class EmployeeForm extends LitElement {
     const notification = document.createElement('notification-message');
     notification.message = this.employee.id ? 'Employee updated successfully!' : 'Employee added successfully!';
     document.body.appendChild(notification);
-    
+
     localStorage.setItem('employees', JSON.stringify(employees));
     Router.go('/');
   }
 
   render() {
     return html`
+    <div class='employee-form-title'>
       <h2>${this.employee.id ? 'Edit Employee' : 'Add New Employee'}</h2>
+    </div>
+    <div class='employee-form-container'>
       <form>
         <label>First Name: <input name="firstName" type="text" .value="${this.employee.firstName || ''}"></label>
         <label>Last Name: <input name="lastName" type="text" .value="${this.employee.lastName || ''}"></label>
@@ -103,76 +158,125 @@ class EmployeeForm extends LitElement {
             <option value="Senior" ?selected="${this.employee.position === 'Senior'}">Senior</option>
           </select>
         </label>
-        <button type="button" @click="${this.saveOrEditEmployee}">Save</button>
+        <div class='save-button'>
+          <button type="button" @click="${this.saveOrEditEmployee}">Save</button>
+        </div>
 
       </form>
+    </div>
     `;
   }
 
   static styles = css`
-   * {
-    margin: 0;
+* {
+  margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: 'Montserrat', sans-serif;
+    letter-spacing: 0.05rem;
+}
+
+h2 {
+  text-align: left;
+    color : var(--primary-orange-color);
+    font-weight: 400;
+}
+
+.employee-form-title {
+  margin: 1rem;
+  text-align: center;
+}
+
+.employee-form-container {
+  overflow-x: auto;
+  padding: 1rem;
+  margin: 0rem auto;
+  background-color: var(--primary-white-color);
+  border-radius: 0.2rem;
+  width: 50%;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+
+}
+
+form {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 8px;
+  grid-template-columns: repeat(2, 1fr); /* İki sütunlu grid */
+  grid-template-rows: auto; /* Yükseklik otomatik */
+}
+
+label {
+  font-weight: 600;
+  font-size: 0em.875rem;
+  color: var(--primary-orange-color);
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+input, select {
+  padding: 1rem;
+  margin-top: 0.5rem;
+  font-size: 0em.875rem;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background-color: #f9f9f9;
+  width: 100%;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: var(--primary-orange-color);
+  background-color: #fff;
+}
+
+button {
+  background-color: var(--primary-orange-color);
+  color: white;
+  padding: 1rem 1.5rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  text-transform: uppercase;
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+}
+
+button:hover {
+  background-color: var(--primary-orange-hover-color);
+}
+
+button:disabled {
+  background-color: #ddd;
+  cursor: not-allowed;
+}
+
+.save-button {
+  grid-column: span 2;
+  display: flex;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .employee-form-container {
+    padding: 1rem;
   }
 
-    h2 {
-      color: var(--primary-orange-color);
-    }
+  form {
+    padding: 1rem;
+  }
 
-    form {
-      display: grid;
-      gap: 1rem;
-      max-width: 600px;
-      margin: 0 auto;
-      background-color: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
+  button {
+    width: 100%;
+  }
+}
 
-    label {
-      font-weight: bold;
-      margin-bottom: 0.5rem;
-    }
-
-    input, select {
-      padding: 0.8rem;
-      font-size: 1rem;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-    }
-
-    input:focus, select:focus {
-      outline: none;
-      border-color: #4CAF50;
-    }
-
-    button {
-      background-color: #FF6F00;
-      color: white;
-      border: none;
-      padding: 0.8rem 1.2rem;
-      font-size: 1rem;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-
-    button:hover {
-      background-color: #FF9800;
-    }
-
-    @media (max-width: 768px) {
-      form {
-        padding: 15px;
-      }
-
-      button {
-        width: 100%;
-      }
-    }
   `;
 }
 
