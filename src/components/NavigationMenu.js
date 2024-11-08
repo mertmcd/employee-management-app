@@ -1,7 +1,7 @@
 import { LitElement, html, css } from 'lit';
 import { Router } from '@vaadin/router';
-
-
+import {msg} from '@lit/localize';
+import { setLocale } from '../localization-config';
 class NavigationMenu extends LitElement {
 
   constructor() {
@@ -13,9 +13,12 @@ class NavigationMenu extends LitElement {
     this.selectedLanguage = 'en';
   }
 
-  changeLanguage(e) {
+  async changeLanguage(e) {
     this.selectedLanguage = e.target.value;
+    console.log(`Changing language to: ${this.selectedLanguage}`);  // Dil değişimini logla
     document.documentElement.lang = this.selectedLanguage;
+    await setLocale(this.selectedLanguage);  // Dil değişimi
+    this.requestUpdate();  // Bileşeni güncelle
   }
 
   addNewEmployee() {
@@ -27,7 +30,8 @@ class NavigationMenu extends LitElement {
   }
 
   goHome() {
-    Router.go('/');  
+    Router.go('/');
+  
   }
 
   render() {
@@ -35,27 +39,29 @@ class NavigationMenu extends LitElement {
       <nav>
   <div class="left-container">
      <img @click="${this.goHome}" class="desktop-logo" src="public/assets/ing-logo.png" alt="Logo" width="100">
-     <img @click="${this.goHome}" class="mobile-logo" src="public/assets/ing-logo-mobile.png" alt="Logo" width="100">
+     <img @click="${this.goHome}" class="mobile-logo" src="public/assets/ing-logo-mobile.png" alt="Logo" width="80">
   </div>
 
   <div class="right-container">
-    <div class="buttons-container">
-      <button class='nav-button' @click="${this.addNewEmployee}">
-        <img src="public/svg/add-employee.svg" alt="Add" width="20">
-      Add New</button>
-      <button class='nav-button' @click="${this.showEmployees}">
-        <img src="public/svg/employees.svg" alt="Employees" width="20">
-      Employees</button>
-    </div>
+  <div class="buttons-container">
+  <button class="nav-button" @click="${this.addNewEmployee}">
+    <img src="public/svg/add-employee.svg" alt="Add" width="20">
+    <span class="button-text">${msg('addEmployee')}</span>
+  </button>
+  <button class="nav-button" @click="${this.showEmployees}">
+    <img src="public/svg/employees.svg" alt="Employees" width="20">
+    <span class="button-text">${msg('employees')}</span>
+  </button>
+</div>
+
     <div class="language-selector">
-      <select @change="${this.changeLanguage}">
-        <option value="en" ?selected="${this.selectedLanguage === 'en'}">English</option>
-        <option value="tr" ?selected="${this.selectedLanguage === 'tr'}">Türkçe</option>
-      </select>
-    </div>
+            <select @change="${this.changeLanguage}">
+              <option value="en" ?selected="${this.selectedLanguage === 'en'}">English</option>
+              <option value="tr" ?selected="${this.selectedLanguage === 'tr'}">Türkçe</option>
+            </select>
+          </div>
   </div>
 </nav>
-
     `;
   }
 
@@ -65,7 +71,6 @@ class NavigationMenu extends LitElement {
     padding: 0;
     box-sizing: border-box;
     font-family: 'Montserrat', sans-serif;
-    letter-spacing: 0.05rem;
   }
   nav {
     display: flex;
@@ -74,7 +79,7 @@ class NavigationMenu extends LitElement {
     padding: 0.5rem 2rem;
     background-color: #fff; 
     color: #ff6a00;
-    font-size: 16px;
+    font-size: 1rem;
   }
 
   nav .left-container {
@@ -135,19 +140,29 @@ class NavigationMenu extends LitElement {
 
   @media (max-width: 768px) {
     nav {
-      flex-direction: column;
+      flex-direction: row;
       align-items: flex-start;
+      padding: 0;
+    }
+
+    .right-container {
+      align-self: center;
+      margin-right: 1rem;
+    }
+
+    .button-text {
+    display: none;
     }
 
     .buttons-container {
-      flex-direction: column;
+      flex-direction: row;
       gap: 8px;
     }
 
     button {
       width: 100%;
-      padding: 12px;
-      font-size: 16px;
+      font-size: 1rem;
+      padding: 0;
     }
 
     select {

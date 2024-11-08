@@ -173,7 +173,6 @@ class EmployeeForm extends LitElement {
     padding: 0;
     box-sizing: border-box;
     font-family: 'Montserrat', sans-serif;
-    letter-spacing: 0.05rem;
 }
 
 h2 {
@@ -209,7 +208,7 @@ form {
 
 label {
   font-weight: 600;
-  font-size: 0em.875rem;
+  font-size: 1rem;
   color: var(--primary-orange-color);
   margin-bottom: 0.5rem;
   display: block;
@@ -265,16 +264,21 @@ button:disabled {
 
 @media (max-width: 768px) {
   .employee-form-container {
-    padding: 1rem;
+    width: 95vw;
   }
 
   form {
-    padding: 1rem;
+    padding: 0rem;
   }
 
   button {
     width: 100%;
   }
+
+  label {
+    font-size: 0.875rem;
+  }
+
 }
 
   `;

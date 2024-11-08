@@ -74,6 +74,12 @@ class App extends LitElement {
     margin: 0 auto;
     background-color: var(--main-bg-color);
   }
+
+  @media (max-width: 768px) {
+    #outlet {
+      padding: 0;
+    }
+  }
 `;
 }
 
