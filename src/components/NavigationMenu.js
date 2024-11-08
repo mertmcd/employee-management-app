@@ -26,18 +26,26 @@ class NavigationMenu extends LitElement {
     Router.go('/');
   }
 
+  goHome() {
+    Router.go('/');  
+  }
+
   render() {
     return html`
       <nav>
   <div class="left-container">
-     <img class="desktop-logo" src="public/assets/ing-logo.png" alt="Logo" width="100">
-     <img class="mobile-logo" src="public/assets/ing-logo-mobile.png" alt="Logo" width="100">
+     <img @click="${this.goHome}" class="desktop-logo" src="public/assets/ing-logo.png" alt="Logo" width="100">
+     <img @click="${this.goHome}" class="mobile-logo" src="public/assets/ing-logo-mobile.png" alt="Logo" width="100">
   </div>
 
   <div class="right-container">
     <div class="buttons-container">
-      <button @click="${this.addNewEmployee}">Add New Employee</button>
-      <button @click="${this.showEmployees}">Employees</button>
+      <button class='nav-button' @click="${this.addNewEmployee}">
+        <img src="public/svg/add-employee.svg" alt="Add" width="20">
+      Add New</button>
+      <button class='nav-button' @click="${this.showEmployees}">
+        <img src="public/svg/employees.svg" alt="Employees" width="20">
+      Employees</button>
     </div>
     <div class="language-selector">
       <select @change="${this.changeLanguage}">
@@ -57,12 +65,13 @@ class NavigationMenu extends LitElement {
     padding: 0;
     box-sizing: border-box;
     font-family: 'Montserrat', sans-serif;
+    letter-spacing: 0.05rem;
   }
   nav {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    padding: 0.5rem;
+    padding: 0.5rem 2rem;
     background-color: #fff; 
     color: #ff6a00;
     font-size: 16px;
@@ -73,6 +82,10 @@ class NavigationMenu extends LitElement {
     align-items: center;
     justify-content: flex-start;
     flex-grow: 1;
+  }
+
+  nav .left-container img {
+    cursor: pointer;
   }
 
   nav .right-container {
@@ -92,9 +105,12 @@ class NavigationMenu extends LitElement {
     font-size: 14px;
   }
 
-  button:hover {
-    background-color: #e65b00;
+  button.nav-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
   }
+
 
   select {
     background-color: #fff;
