@@ -82,6 +82,7 @@ class EmployeeForm extends LitElement {
 
   render() {
     return html`
+      <h2>${this.employee.id ? 'Edit Employee' : 'Add New Employee'}</h2>
       <form>
         <label>First Name: <input name="firstName" type="text" .value="${this.employee.firstName || ''}"></label>
         <label>Last Name: <input name="lastName" type="text" .value="${this.employee.lastName || ''}"></label>
@@ -109,11 +110,15 @@ class EmployeeForm extends LitElement {
   }
 
   static styles = css`
-    :host {
-      display: block;
-      padding: 20px;
-      font-family: Arial, Helvetica, sans-serif;
-      background-color: #f4f4f9;
+   * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+  }
+
+    h2 {
+      color: var(--primary-orange-color);
     }
 
     form {

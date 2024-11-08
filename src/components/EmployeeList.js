@@ -107,70 +107,63 @@ class EmployeeList extends LitElement {
 
   render() {
     return html`
+    <div class='employee-list-title'>
+      <h2>Employee List</h2>
+    </div>
       <div class="employee-list-container">
         <table class="employee-list-table">
         <thead>
-  <tr>
-    <th>First Name
-      <input
-        type="text"
-        @input="${e => this.updateFilter(e, 'firstName')}"
-        placeholder="Search"
-      />
-    </th>
-    <th>Last Name
-      <input
-        type="text"
-        @input="${e => this.updateFilter(e, 'lastName')}"
-        placeholder="Search"
-      />
-    </th>
-    <th>Date of Employment
-      <input
-        type="text"
-        @input="${e => this.updateFilter(e, 'dateOfEmployment')}"
-        placeholder="Search"
-      />
-    </th>
-    <th>Date of Birth
-      <input
-        type="text"
-        @input="${e => this.updateFilter(e, 'dateOfBirth')}"
-        placeholder="Search"
-      />
-    </th>
-    <th>Phone
-      <input
-        type="text"
-        @input="${e => this.updateFilter(e, 'phone')}"
-        placeholder="Search"
-      />
-    </th>
-    <th>Email
-      <input
-        type="text"
-        @input="${e => this.updateFilter(e, 'email')}"
-        placeholder="Search"
-      />
-    </th>
-    <th>Department
-      <input
-        type="text"
-        @input="${e => this.updateFilter(e, 'department')}"
-        placeholder="Search"
-      />
-    </th>
-    <th>Position
-      <input
-        type="text"
-        @input="${e => this.updateFilter(e, 'position')}"
-        placeholder="Search"
-      />
-    </th>
-    <th>Actions</th>
-  </tr>
-</thead>
-
+        <tr class="search-row">
+      <th>
+        <input
+          type="text"
+          @input="${e => this.updateFilter(e, 'firstName')}"
+          placeholder="Search"
+        />
+      </th>
+      <th>
+        <input
+          type="text"
+          @input="${e => this.updateFilter(e, 'lastName')}"
+          placeholder="Search"
+        />
+      </th>
+      <th>
+      </th>
+      <th>
+      </th>
+      <th>
+      </th>
+      <th>
+      </th>
+      <th>
+        <input
+          type="text"
+          @input="${e => this.updateFilter(e, 'department')}"
+          placeholder="Search"
+        />
+      </th>
+      <th>
+        <input
+          type="text"
+          @input="${e => this.updateFilter(e, 'position')}"
+          placeholder="Search"
+        />
+      </th>
+      <th></th>
+    </tr>
+    <tr>
+      <th>First Name</th>
+      <th>Last Name</th>
+      <th>Date of Employment</th>
+      <th>Date of Birth</th>
+      <th>Phone</th>
+      <th>Email</th>
+      <th>Department</th>
+      <th>Position</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
           <tbody>
             ${this.paginatedEmployees.length === 0 
               ? html`
@@ -180,17 +173,25 @@ class EmployeeList extends LitElement {
                 ` 
               : this.paginatedEmployees.map(emp => html`
                   <tr>
-                    <td>${emp.firstName}</td>
-                    <td>${emp.lastName}</td>
-                    <td>${emp.dateOfEmployment}</td>
-                    <td>${emp.dateOfBirth}</td>
-                    <td>${emp.phone}</td>
-                    <td>${emp.email}</td>
-                    <td>${emp.department}</td>
-                    <td>${emp.position}</td>
+                    <td class='first-name'>${emp.firstName}</td>
+                    <td class='last-name'>${emp.lastName}</td>
+                    <td class='date-of-employment'>${emp.dateOfEmployment}</td>
+                    <td class='date-of-birth'>${emp.dateOfBirth}</td>
+                    <td class='phone'>${emp.phone}</td>
+                    <td class='email'>${emp.email}</td>
+                    <td class='department'>${emp.department}</td>
+                    <td class='position'>${emp.position}</td>
                     <td class="actions-container">
-                      <button @click="${() => this.navigateToEditPage(emp)}">Edit</button>
-                      <button @click="${() => this.deleteEmployee(emp.id)}">Delete</button>
+                      <button class='action-button' @click="${() => this.navigateToEditPage(emp)}">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                          <path d="M3 21h3.75L17.81 9.94l-3.75-3.75L3 17.25V21zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                        </svg>
+                      </button>
+                      <button class='action-button' @click="${() => this.deleteEmployee(emp.id)}">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                          <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                        </svg>
+                      </button>
                     </td>
                   </tr>
                 `)}
@@ -221,154 +222,246 @@ class EmployeeList extends LitElement {
   }
   
   static styles = css`
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: 0.05rem;
+  }
 
-    .pagination-controls {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-top: 20px;
-    }
+  h2 {
+    text-align: left;
+    color : var(--primary-orange-color);
+    font-weight: 400;
+  }
 
-    .pagination-controls button {
-      background-color: #ff6a00;
-      color: white;
-      padding: 8px 12px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      margin: 0 10px;
-      font-size: 14px;
-    }
+  .employee-list-title {
+    margin: 1rem;
+  }
 
-    .pagination-controls button[disabled] {
-      background-color: #ccc;
-      cursor: not-allowed;
-    }
+.employee-list-container {
+  overflow-x: auto;
+  padding: 1rem;
+  background-color: var(--primary-white-color);
+  border-radius: 0.2rem;
+}
 
-    .employee-list-container {
-      padding: 20px;
-      background-color: #fff;
-      margin: 20px auto;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
+.employee-list-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  min-width: 600px;
+  background-color: var(--primary-white-color);
+}
 
+.employee-list-table th {
+  background-color: var(--secondary-white-color);
+  color: var(--primary-orange-color);
+  font-weight: 400;
+  letter-spacing: 0.05rem;
+  font-size: 1rem;
+  text-align: left;
+  padding: 0.6rem;
+  white-space: nowrap;
+}
+
+.employee-list-table th input {
+  display: block;
+  margin-top: 0.25rem;
+  width: 100%;
+  padding: 0.4rem;
+  font-size: 0.9rem;
+  border: 1px solid var(--border-gray-color);
+  border-radius: 4px;
+  background: url('../../public/svg/search.svg') no-repeat 95% 50%;
+}
+
+.employee-list-table th input:focus {
+  outline: none;
+  border-color: var(--secondary-orange-color);
+}
+
+.employee-list-table th, 
+.employee-list-table td {
+  padding: 1rem 0.6rem;
+  text-align: left;
+  background-color: white;
+  border: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.employee-list-table td {
+  color: var(--secondary-gray-color);
+}
+
+.employee-list-table td.first-name,
+.employee-list-table td.last-name {
+  font-weight: bold;
+  color: var(--primary-gray-color);
+  max-width: 20rem
+}
+
+.employee-list-table tr {
+  border-bottom: 1px solid var(--border-gray-color);
+}
+
+.employee-list-table td.actions-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+/* Pagination */
+.pagination-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+}
+
+.pagination-controls button {
+  padding: 0.5rem 1rem;
+  background-color: var(--secondary-orange-color);
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.pagination-controls button:hover {
+  background-color: #e67e22; /* Hover rengi */
+}
+
+.pagination-controls button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .employee-list-table {
+    grid-template-columns: repeat(3, 1fr); /* Küçük ekranlarda sadece 3 sütun göster */
+  }
+
+  .employee-list-table th,
+  .employee-list-table td {
+    font-size: 0.9rem;
+  }
+
+  .pagination-controls {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+  button {
+    background-color: var(--primary-orange-color);
+    color: white;
+    padding: 0.4rem 0.6rem;
+    border: none;
+    border-radius: 0.2rem;
+    cursor: pointer;
+    margin-right: 0.4rem;
+    font-size: 0.875rem;
+  }
+
+  .action-button {
+    background-color: var(--primary-white-color);
+    color: var(--primary-orange-color);
+  }
+
+  button:hover {
+    background-color: var(--primary-orange-hover-color);
+  }
+
+  button.delete {
+    background-color: var(--primary-button-color);
+  }
+
+  button.delete:hover {
+    background-color: var(--primary-button-hover-color);
+  }
+
+  .no-records {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+
+  .no-records-message {
+    text-align: center;
+    padding: 1rem;
+    font-weight: bold;
+    font-size: 1rem;
+  }
+
+  .confirm-dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 1rem;
+    border: 0.1rem solid var(--border-gray-color);
+    box-shadow: 0 0.2rem 0.4rem rgba(0, 0, 0, 0.1);
+  }
+
+  .confirm-dialog button {
+    margin: 0.25rem;
+    background-color: white;
+    border: 0.05rem solid var(--border-gray-color);
+  }
+
+  .confirm-dialog button.-proceed {
+    background-color: var(--primary-orange-color);
+    color: white;
+  }
+
+  .confirm-dialog button.-proceed:hover {
+    background-color: var(--primary-orange-hover-color);
+  }
+
+  .confirm-dialog button.-cancel {
+    background-color: white;
+    color: var(--primary-orange-color);
+    border: 0.05rem solid var(--border-orange-color);
+  }
+
+  .confirm-dialog button.-cancel:hover {
+    background-color: #ccc;
+  }
+
+  @media (max-width: 768px) {
     .employee-list-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
+    grid-template-columns: repeat(3, 1fr); /* Küçük ekranlarda sadece 3 sütun göster */
+  }
 
-    .employee-list-table th, .employee-list-table td {
-      padding: 12px;
-      text-align: left;
-      border-bottom: 1px solid #ddd;
-      max-width: 120px;
-    }
+  .employee-list-table th,
+  .employee-list-table td {
+    font-size: 0.9rem;
+  }
 
-    .employee-list-table td.actions-container {
-      display: flex;
-      justify-content: center;
-    }
+  /* Arama inputlarını daha uygun bir şekilde yerleştir */
+  .employee-list-table input[type="text"] {
+    font-size: 0.8rem;
+  }
 
-    .employee-list-table th {
-      background-color: #ff6a00;
-      color: white;
-    }
-
-    .employee-list-table tr:nth-child(even) {
-      background-color: #f9f9f9;
-    }
+  .pagination-controls {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 
     button {
-      background-color: #ff6a00;
-      color: white;
-      padding: 8px 12px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      margin-right: 8px;
-      font-size: 14px;
+      font-size: 0.75rem;
+      padding: 0.3rem 0.5rem;
     }
-
-    button:hover {
-      background-color: #e65b00;
-    }
-
-    button.delete {
-      background-color: #d9534f;
-    }
-
-    button.delete:hover {
-      background-color: #c9302c;
-    }
-
-    .no-records {
-      background-color: #f8d7da;
-      color: #721c24;
-    }
-
-    .no-records-message {
-      text-align: center;
-      padding: 20px;
-      font-weight: bold;
-      font-size: 16px;
-    }
-
-    .confirm-dialog {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background-color: white;
-      padding: 20px;
-      border: 2px solid #ccc;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .confirm-dialog button {
-      margin: 5px;
-      background-color: white;
-      border: 1px solid #ccc;
-      font-family: Arial, Helvetica, sans-serif;
-    }
-
-    .confirm-dialog button.-proceed {
-        background-color: #ff6a00;
-        color: white;
-    }
-
-    .confirm-dialog button.-proceed:hover {
-        background-color: #e65b00;
-    }
+  }
+`;
 
 
-    .confirm-dialog button.-cancel {
-        background-color: white;
-        color: #ff6a00;
-        border: 1px solid #ff6a00;
-    }
 
-    .confirm-dialog button.-cancel:hover {
-        background-color: #ccc;
-    }
-
-    @media (max-width: 768px) {
-      .employee-list-container {
-        padding: 15px;
-        width: 90%;
-      }
-
-      .employee-list-table th, .employee-list-table td {
-        padding: 8px;
-      }
-
-      button {
-        font-size: 12px;
-        padding: 6px 10px;
-      }
-    }
-  `;
 }
 
 customElements.define('employee-list', EmployeeList);

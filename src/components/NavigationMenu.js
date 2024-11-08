@@ -29,34 +29,56 @@ class NavigationMenu extends LitElement {
   render() {
     return html`
       <nav>
-        <div class="logo">
-            <img src="public/assets/ing-logo.png" alt="Logo" width="100">
-        </div>
+  <div class="left-container">
+     <img class="desktop-logo" src="public/assets/ing-logo.png" alt="Logo" width="100">
+     <img class="mobile-logo" src="public/assets/ing-logo-mobile.png" alt="Logo" width="100">
+  </div>
 
-        <div class="button-container">
-          <button @click="${this.addNewEmployee}">Add New Employee</button>
-          <button @click="${this.showEmployees}">Employees</button>
-        </div>
-        <select @change="${this.changeLanguage}">
-          <option value="en" ?selected="${this.selectedLanguage === 'en'}">English</option>
-          <option value="tr" ?selected="${this.selectedLanguage === 'tr'}">Türkçe</option>
-        </select>
-      </nav>
+  <div class="right-container">
+    <div class="buttons-container">
+      <button @click="${this.addNewEmployee}">Add New Employee</button>
+      <button @click="${this.showEmployees}">Employees</button>
+    </div>
+    <div class="language-selector">
+      <select @change="${this.changeLanguage}">
+        <option value="en" ?selected="${this.selectedLanguage === 'en'}">English</option>
+        <option value="tr" ?selected="${this.selectedLanguage === 'tr'}">Türkçe</option>
+      </select>
+    </div>
+  </div>
+</nav>
+
     `;
   }
 
   static styles = css`
   * {
-    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
   }
   nav {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    padding: 1rem;
+    padding: 0.5rem;
     background-color: #fff; 
     color: #ff6a00;
     font-size: 16px;
+  }
+
+  nav .left-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-grow: 1;
+  }
+
+  nav .right-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
   }
 
   button {
@@ -75,17 +97,25 @@ class NavigationMenu extends LitElement {
   }
 
   select {
-    background-color: #ff6a00;
-    color: white;
-    border: 1px solid #fff;
+    background-color: #fff;
+    color: #ff6a00;
     padding: 5px;
     font-size: 14px;
+    border: 1px solid #ff6a00;
   }
 
-  .button-container {
+  .buttons-container {
     display: flex;
     gap: 10px;
   }
+
+  .left-container .mobile-logo {
+  display: none;
+}
+
+.left-container .desktop-logo {
+  display: block;
+}
 
   @media (max-width: 768px) {
     nav {
@@ -93,7 +123,7 @@ class NavigationMenu extends LitElement {
       align-items: flex-start;
     }
 
-    .button-container {
+    .buttons-container {
       flex-direction: column;
       gap: 8px;
     }
@@ -108,6 +138,13 @@ class NavigationMenu extends LitElement {
       width: 100%;
       padding: 8px;
       font-size: 16px;
+    }
+
+    .left-container .desktop-logo {
+      display: none;
+    }
+    .left-container .mobile-logo {
+      display: block;
     }
   }
 `;
