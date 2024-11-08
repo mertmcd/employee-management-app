@@ -1,7 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import { Router } from '@vaadin/router';
-import {msg} from '@lit/localize';
-import { setLocale } from '../localization-config';
+import { msg } from '@lit/localize';
 class NavigationMenu extends LitElement {
 
   constructor() {
@@ -15,10 +14,7 @@ class NavigationMenu extends LitElement {
 
   async changeLanguage(e) {
     this.selectedLanguage = e.target.value;
-    console.log(`Changing language to: ${this.selectedLanguage}`);  // Dil değişimini logla
     document.documentElement.lang = this.selectedLanguage;
-    await setLocale(this.selectedLanguage);  // Dil değişimi
-    this.requestUpdate();  // Bileşeni güncelle
   }
 
   addNewEmployee() {
@@ -77,8 +73,8 @@ class NavigationMenu extends LitElement {
     justify-content: flex-end;
     align-items: center;
     padding: 0.5rem 2rem;
-    background-color: #fff; 
-    color: #ff6a00;
+    background-color: var(--primary-white-color); 
+    color: var(--primary-orange-color);
     font-size: 1rem;
   }
 
@@ -100,8 +96,8 @@ class NavigationMenu extends LitElement {
   }
 
   button {
-    background-color: #fff;
-    color: #ff6a00;
+    background-color: var(--primary-white-color);
+    color: var(--primary-orange-color);
     border: none;
     padding: 10px 20px;
     cursor: pointer;
@@ -118,11 +114,11 @@ class NavigationMenu extends LitElement {
 
 
   select {
-    background-color: #fff;
-    color: #ff6a00;
+    background-color: var(--primary-white-color);
+    color: var(--primary-orange-color);
     padding: 5px;
     font-size: 14px;
-    border: 1px solid #ff6a00;
+    border: 1px solid var(--primary-orange-color);
   }
 
   .buttons-container {

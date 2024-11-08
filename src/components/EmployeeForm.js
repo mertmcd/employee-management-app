@@ -27,9 +27,12 @@ class EmployeeForm extends LitElement {
   }
 
   findEmployeeById() {
-    const id = parseInt(location.href.split(':').pop());
-    const employee = this.employees.find(emp => emp.id === id);
-    this.fillFormDataById(employee);
+    const url = window.location.pathname;
+    const id = url.split('/').pop();
+    if (id) {
+      const employee = this.employees.find(emp => emp.id == id);
+      this.fillFormDataById(employee);
+    }
   }
 
   fillFormDataById(employee) {

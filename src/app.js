@@ -19,7 +19,8 @@ class App extends LitElement {
     router.setRoutes([
       { path: '/', component: 'employee-list' },
       { path: '/add-employee', component: 'employee-form' },
-      { path: '/edit-employee:id', component: 'employee-form' },
+      { path: '/edit-employee/:id', component: 'employee-form' },
+
     ]);
   }
 

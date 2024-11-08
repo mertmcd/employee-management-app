@@ -63,7 +63,7 @@ class EmployeeList extends LitElement {
   }
 
   navigateToEditPage(employee) {
-    Router.go(`/edit-employee:${employee.id}`);
+    Router.go(`/edit-employee/${employee.id}`);
   }
 
   deleteEmployee(id) {
@@ -251,34 +251,42 @@ class EmployeeList extends LitElement {
     `;
   }
 
-  // card view render
-  renderList() {
-    return html`
-      <div class="employee-list">
-        ${this.employees.map(emp => html`
-          <div class="employee-card">
-            <h3>${emp.firstName} ${emp.lastName}</h3>
-            <hr>
-            <p><strong>Date of Employment:</strong> ${emp.dateOfEmployment}</p>
-            <p><strong>Date of Birth:</strong> ${emp.dateOfBirth}</p>
-
-            <p><strong>Phone:</strong> ${emp.phone}</p>
-            <p><strong>Email:</strong> ${emp.email}</p>
-            <p><strong>Department:</strong> ${emp.department}</p>
-            <p><strong>Position:</strong> ${emp.position}</p>
-            <div class="card-actions">
-              <button @click="${() => this.navigateToEditPage(emp)}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-                          <path d="M3 21h3.75L17.81 9.94l-3.75-3.75L3 17.25V21zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
-                        </svg></button>
-              <button @click="${() => this.deleteEmployee(emp.id)}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-                          <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
-                        </svg></button>
-            </div>
+  // list view render
+renderList() {
+  return html`
+    <div class="employee-list">
+      ${this.employees.map(emp => html`
+        <div class="employee-item">
+          <ul>
+            <li><strong>First Name:</strong> ${emp.firstName}</li>
+            <li><strong>Last Name:</strong> ${emp.lastName}</li>
+            <li><strong>Date of Employment:</strong> ${emp.dateOfEmployment}</li>
+            <li><strong>Date of Birth:</strong> ${emp.dateOfBirth}</li>
+            <li><strong>Phone:</strong> ${emp.phone}</li>
+            <li><strong>Email:</strong> ${emp.email}</li>
+            <li><strong>Department:</strong> ${emp.department}</li>
+            <li><strong>Position:</strong> ${emp.position}</li>
+          </ul>
+          <div class="actions-container">
+            <button class="action-button" @click="${() => this.navigateToEditPage(emp)}">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                <path d="M3 21h3.75L17.81 9.94l-3.75-3.75L3 17.25V21zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+              </svg>
+              Edit
+            </button>
+            <button class="action-button" @click="${() => this.deleteEmployee(emp.id)}">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+              </svg>
+              Delete
+            </button>
           </div>
-        `)}
-      </div>
-    `;
-  }
+        </div>
+      `)}
+    </div>
+  `;
+}
+
 
   static styles = css`
   * {
@@ -301,6 +309,8 @@ class EmployeeList extends LitElement {
 .employee-list-title {
     margin: 1rem;
   }
+
+  /* table view styles */
 
 .employee-list-container {
   overflow-x: auto;
@@ -380,73 +390,48 @@ class EmployeeList extends LitElement {
   align-items: center;
 }
 
-/* List View */
+/* Genel Liste Stili */
 .employee-list {
   display: flex;
   flex-wrap: wrap;
+  gap: 20px;
+  padding: 20px;
+  justify-content: center;
 }
 
-.employee-card {
-  background-color: var(--primary-white-color);
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  margin: 10px;
+.employee-item {
   width: 100%;
-  max-width: 400px;
+  max-width: 300px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.employee-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-}
-
-.employee-card h3 {
-  font-size: 20px;
-  margin-bottom: 10px;
-  color: var(--primary-orange-color);
-}
-
-.employee-card hr {
-  border: 0;
-  border-top: 2px solid var(--primary-orange-color);
-  margin: 10px 0;
-}
-
-.employee-card p {
-  margin: 8px 0;
-  font-size: 14px;
-  color: var(--secondary-gray-color);
-}
-
-.employee-card p strong {
-  font-weight: bold;
-  color: var(--primary-gray-color);
-}
-
-.card-actions {
+.employee-item .actions-container {
   display: flex;
-  gap: 10px;
-  margin-top: 15px;
-  justify-content: flex-end;
+  justify-content: space-around;
+  margin-top: 1rem;
 }
 
-.card-actions button {
-  background-color: var(--primary-white-color);
-  color: var(--primary-orange-color);
-  border: none;
-  padding: 8px 15px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+.employee-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
-.card-actions button:hover {
-  background-color: var(--primary-orange-color);
-  color: var(--primary-white-color);
+.employee-item ul {
+  list-style-type: none;
+  padding-left: 0;
 }
 
+.employee-item li {
+  margin: 8px 0;
+}
+
+.employee-item strong {
+  font-weight: 600;
+}
 
 /* Pagination */
 .pagination-controls {
@@ -509,6 +494,9 @@ class EmployeeList extends LitElement {
   .action-button {
     background-color: var(--primary-white-color);
     color: var(--primary-orange-color);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
   }
 
   .action-button:hover {
@@ -633,6 +621,10 @@ class EmployeeList extends LitElement {
 
   .employee-list-table input[type="text"] {
     font-size: 0.8rem;
+  }
+
+  .employee-list {
+  grid-template-columns: repeat(1, 1fr);
   }
 
   .pagination-controls {
