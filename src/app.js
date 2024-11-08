@@ -17,7 +17,7 @@ class App extends LitElement {
   firstUpdated() {
     const router = new Router(this.shadowRoot.querySelector('#outlet'));
     router.setRoutes([
-      { path: '/', component: 'employee-list' },
+      { path: '/employees', component: 'employee-list' },
       { path: '/add-employee', component: 'employee-form' },
       { path: '/edit-employee/:id', component: 'employee-form' },
 
