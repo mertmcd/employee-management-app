@@ -35,17 +35,34 @@ class EmployeeList extends LitElement {
       department: '',
       position: '',
     };
+    this._handleResize = this._handleResize.bind(this);
+    this._handlePopstate = this._handlePopstate.bind(this);
     updateWhenLocaleChanges(this);
+  }
+
+  firstUpdated() {
+    this._handleResize();
+    this._handlePopstate();
   }
 
   connectedCallback() {
     super.connectedCallback();
     this.loadEmployees();
-    window.addEventListener('resize', this.onResize);
-    this.onResize();
+    window.addEventListener('popstate', this._handlePopstate);
+    window.addEventListener('resize', this._handleResize);
   }
 
-  onResize() {
+  disconnectedCallback() {
+    window.removeEventListener('resize', this._handleResize);
+    window.removeEventListener('popstate', this._handlePopstate);
+    super.disconnectedCallback();
+  }
+
+  _handlePopstate() {
+    this.currentPage = Number(new URLSearchParams(window.location.search).get('page')) || 1;
+  }
+
+  _handleResize() {
     if (window.innerWidth < 768) {
       this.viewMode = 'list';
     } else {
@@ -56,7 +73,6 @@ class EmployeeList extends LitElement {
 
   toggleViewMode() {
     this.viewMode = this.viewMode === 'table' ? 'list' : 'table';
-    this.requestUpdate();
   }
 
   loadEmployees() {
@@ -103,6 +119,7 @@ class EmployeeList extends LitElement {
     this.filters = {...this.filters, [field]: e.target.value.toLowerCase()};
   }
 
+  // for list
   get filteredEmployees() {
     return this.employees.filter((emp) => {
       return Object.keys(this.filters).every((key) => {
@@ -111,6 +128,7 @@ class EmployeeList extends LitElement {
     });
   }
 
+  // for table
   get paginatedEmployees() {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
@@ -121,17 +139,26 @@ class EmployeeList extends LitElement {
     return Math.ceil(this.filteredEmployees.length / this.itemsPerPage);
   }
 
-  goToPreviousPage() {
-    if (this.currentPage > 1) {
-      this.currentPage--;
+  goToNextPage() {
+    if (this.currentPage < this.totalPages) {
+      const page = this.currentPage + 1;
+      this.setUrlParams(page);
     }
   }
 
-  goToNextPage() {
-    if (this.currentPage < this.totalPages) {
-      this.currentPage++;
+  goToPreviousPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.setUrlParams();
     }
   }
+
+  setUrlParams(pageNumber) {  
+      const url = new URL(window.location.href);
+      url.searchParams.set('page', pageNumber || this.currentPage);
+      history.pushState({}, '', url);
+      window.dispatchEvent(new PopStateEvent('popstate', { state: history.state }));
+    }
 
   renderSearchInputs() {
     return html`
