@@ -35,7 +35,7 @@ class NavigationMenu extends LitElement {
       <nav>
   <div class="left-container">
      <img @click="${this.goHome}" class="desktop-logo" src="public/assets/ing-logo.png" alt="Logo" width="100">
-     <img @click="${this.goHome}" class="mobile-logo" src="public/assets/ing-logo-mobile.png" alt="Logo" width="80">
+     <img @click="${this.goHome}" class="mobile-logo" src="public/assets/ing-logo-mobile.png" alt="Logo" width="70">
   </div>
 
   <div class="right-container">
@@ -55,7 +55,7 @@ class NavigationMenu extends LitElement {
               <option value="en" ?selected="${this.selectedLanguage === 'en'}">English</option>
               <option value="tr" ?selected="${this.selectedLanguage === 'tr'}">Türkçe</option>
             </select>
-          </div>
+    </div>
   </div>
 </nav>
     `;

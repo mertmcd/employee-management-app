@@ -241,8 +241,8 @@ form {
   gap: 1rem;
   padding: 1rem;
   border-radius: 8px;
-  grid-template-columns: repeat(2, 1fr); /* İki sütunlu grid */
-  grid-template-rows: auto; /* Yükseklik otomatik */
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: auto;
 }
 
 label {
@@ -254,12 +254,12 @@ label {
 }
 
 input, select {
-  padding: 1rem;
+  padding: 0.5rem;
   margin-top: 0.5rem;
-  font-size: 0em.875rem;
+  font-size: 0.875rem;
   border-radius: 8px;
-  border: 1px solid #ddd;
-  background-color: #f9f9f9;
+  border: 1px solid var(--border-gray-color);
+  background-color: var(--primary-white-color);
   width: 100%;
   transition: border-color 0.3s ease, background-color 0.3s ease;
 }
@@ -267,7 +267,7 @@ input, select {
 input:focus, select:focus {
   outline: none;
   border-color: var(--primary-orange-color);
-  background-color: #fff;
+  background-color: var(--primary-white-color);
 }
 
 button {
@@ -289,7 +289,7 @@ button:hover {
 }
 
 button:disabled {
-  background-color: #ddd;
+  background-color: var(--border-gray-color);
   cursor: not-allowed;
 }
 

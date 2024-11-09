@@ -518,7 +518,15 @@ renderList() {
   .search-inputs {
     flex-direction: column;
     gap: 0.25rem;
+    position: sticky;
+    left: 0;
   }
+
+  .switch-button-container {
+    position: sticky;
+    left: 0;
+  }
+
   .employee-list-table {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -527,10 +535,6 @@ renderList() {
   .employee-list-table td {
     font-size: 0.9rem;
   }
-
-  .employee-list-container .switch-button-container {
-  text-align: left;
-}
 
   .pagination-controls {
     flex-direction: column;
