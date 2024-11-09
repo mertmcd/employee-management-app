@@ -22,11 +22,11 @@ class NavigationMenu extends LitElement {
   }
 
   showEmployees() {
-    Router.go('/employees');
+    Router.go('/');
   }
 
   goHome() {
-    Router.go('/employees');
+    Router.go('/');
   
   }
 
