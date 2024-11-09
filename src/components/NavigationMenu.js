@@ -1,6 +1,7 @@
 import { LitElement, html, css } from 'lit';
 import { Router } from '@vaadin/router';
-import { msg } from '@lit/localize';
+import { msg, updateWhenLocaleChanges } from '@lit/localize';
+import {setLocale} from '../services/localization.js';
 class NavigationMenu extends LitElement {
 
   constructor() {
@@ -10,11 +11,13 @@ class NavigationMenu extends LitElement {
       tr: 'Türkçe'
     };
     this.selectedLanguage = 'en';
+    updateWhenLocaleChanges(this);
   }
 
-  async changeLanguage(e) {
+  changeLanguage(e) {
     this.selectedLanguage = e.target.value;
     document.documentElement.lang = this.selectedLanguage;
+    setLocale(this.selectedLanguage);
   }
 
   addNewEmployee() {
@@ -42,11 +45,11 @@ class NavigationMenu extends LitElement {
   <div class="buttons-container">
   <button class="nav-button" @click="${this.addNewEmployee}">
     <img src="public/svg/add-employee.svg" alt="Add" width="20">
-    <span class="button-text">${msg('addEmployee')}</span>
+    <span class="button-text">${msg('Add Employee')}</span>
   </button>
   <button class="nav-button" @click="${this.showEmployees}">
     <img src="public/svg/employees.svg" alt="Employees" width="20">
-    <span class="button-text">${msg('employees')}</span>
+    <span class="button-text">${msg('Employees')}</span>
   </button>
 </div>
 

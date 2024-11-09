@@ -2,6 +2,7 @@ import {LitElement, html, css} from 'lit';
 import {Router} from '@vaadin/router';
 import './ShowNotification.js';
 import employeeService from '../services/employeeService.js';
+import { msg, updateWhenLocaleChanges } from '@lit/localize';
 
 class EmployeeForm extends LitElement {
   static get properties() {
@@ -19,6 +20,7 @@ class EmployeeForm extends LitElement {
     this.employees = [];
     this.showConfirmDialog = false;
     this.employeeToEdit = null;
+    updateWhenLocaleChanges(this);
   }
 
   connectedCallback() {
@@ -69,7 +71,7 @@ class EmployeeForm extends LitElement {
 
     if (!firstName || firstName.length < 2) {
       this.showFieldNotification(
-        'First Name must be at least 2 characters.',
+        msg('First Name must be at least 2 characters'),
         'error'
       );
       return false;
@@ -77,7 +79,7 @@ class EmployeeForm extends LitElement {
 
     if (!lastName || lastName.length < 2) {
       this.showFieldNotification(
-        'Last Name must be at least 2 characters.',
+        msg('Last Name must be at least 2 characters'),
         'error'
       );
       return false;
@@ -85,7 +87,7 @@ class EmployeeForm extends LitElement {
 
     if (!dateOfEmployment || isNaN(Date.parse(dateOfEmployment))) {
       this.showFieldNotification(
-        'Please provide a valid Date of Employment.',
+        msg('Please provide a valid Date of Employment'),
         'error'
       );
       return false;
@@ -93,20 +95,20 @@ class EmployeeForm extends LitElement {
 
     if (!dateOfBirth || isNaN(Date.parse(dateOfBirth))) {
       this.showFieldNotification(
-        'Please provide a valid Date of Birth.',
+        msg('Please provide a valid Date of Birth'),
         'error'
       );
       return false;
     }
 
     if (!phone || !/^\d{10}$/.test(phone)) {
-      this.showFieldNotification('Phone must be a 10-digit number.', 'error');
+      this.showFieldNotification(msg('Phone number must be a 10 digit number'), 'error');
       return false;
     }
 
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       this.showFieldNotification(
-        'Please provide a valid email address.',
+        msg('Please provide a valid email address'),
         'error'
       );
       return false;
@@ -172,7 +174,7 @@ class EmployeeForm extends LitElement {
       employees.push(employee);
     }
 
-    this.showFieldNotification('Employee saved successfully!', 'success');
+    this.showFieldNotification(msg('Employee saved successfully'), 'success');
 
     localStorage.setItem('employees', JSON.stringify(employees));
     Router.go('/');
@@ -180,97 +182,98 @@ class EmployeeForm extends LitElement {
 
   render() {
     return html`
-      <div class="employee-form-title">
-        <h2>${this.employee.id ? 'Edit Employee' : 'Add New Employee'}</h2>
-      </div>
+     <div class="employee-form-title">
+      <h2>${this.employee.id ? msg('Edit Employee') : msg('Save Employee')}</h2>
+    </div>
+
       <div class="employee-form-container">
         <form>
           <label
-            >First Name:
+            >${msg('First Name')}:
             <input
               name="firstName"
               type="text"
               .value="${this.employee.firstName || ''}"
           /></label>
           <label
-            >Last Name:
+            >${msg('Last Name')}:
             <input
               name="lastName"
               type="text"
               .value="${this.employee.lastName || ''}"
           /></label>
           <label
-            >Date of Employment:
+            >${msg('Date of Employment')}:
             <input
               name="dateOfEmployment"
               type="date"
               .value="${this.employee.dateOfEmployment || ''}"
           /></label>
           <label
-            >Date of Birth:
+            >${msg('Date of Birth')}:
             <input
               name="dateOfBirth"
               type="date"
               .value="${this.employee.dateOfBirth || ''}"
           /></label>
           <label
-            >Phone:
+            >${msg('Phone')}:
             <input
               name="phone"
               type="text"
               .value="${this.employee.phone || ''}"
           /></label>
           <label
-            >Email:
+            >${msg('Email')}:
             <input
               name="email"
               type="email"
               .value="${this.employee.email || ''}"
           /></label>
           <label
-            >Department:
+            >${msg('Department')}:
             <select name="department">
               <option
                 value="Analytics"
                 ?selected="${this.employee.department === 'Analytics'}"
               >
-                Analytics
+                ${msg('Analytics')}
               </option>
               <option
                 value="Tech"
                 ?selected="${this.employee.department === 'Tech'}"
               >
-                Tech
+                ${msg('Tech')}
               </option>
             </select>
           </label>
           <label
-            >Position:
+            >${msg('Position')}:
             <select name="position">
               <option
                 value="Junior"
                 ?selected="${this.employee.position === 'Junior'}"
               >
-                Junior
+                ${msg('Junior')}
               </option>
               <option
                 value="Medior"
                 ?selected="${this.employee.position === 'Medior'}"
               >
-                Medior
+                ${msg('Medior')}
               </option>
               <option
                 value="Senior"
                 ?selected="${this.employee.position === 'Senior'}"
               >
-                Senior
+                ${msg('Senior')}
               </option>
             </select>
           </label>
         </form>
         <div class="save-button">
           <button type="button" @click="${this.saveOrEditEmployee}">
-            Save
+            ${this.employee.id ? msg('Edit Employee') : msg('Save Employee')}
           </button>
         </div>
 
@@ -279,17 +282,17 @@ class EmployeeForm extends LitElement {
               <div class="overlay">
                 <div class="confirm-dialog">
                   <p>
-                    Are you sure you want to edit
-                    <strong
+                  ${this.employee.id ? msg('Are you sure you want to edit?') : msg('Are you sure you want to save?')}
+                  <strong
                       >${this.employee.firstName}
                       ${this.employee.lastName}</strong
                     >?
                   </p>
                   <button class="-proceed" @click="${this.confirmEdit}">
-                    Proceed
+                    ${msg('Proceed')}
                   </button>
                   <button class="-cancel" @click="${this.cancelEdit}">
-                    Cancel
+                    ${msg('Cancel')}
                   </button>
                 </div>
               </div>
