@@ -1,6 +1,6 @@
 import {LitElement, html, css} from 'lit';
 
-class NotificationMessage extends LitElement {
+export class NotificationMessage extends LitElement {
   constructor() {
     super();
     this.message = '';
@@ -43,4 +43,4 @@ class NotificationMessage extends LitElement {
   `;
 }
 
-customElements.define('notification-message', NotificationMessage);
+window.customElements.define('notification-message', NotificationMessage);

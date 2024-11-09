@@ -1,10 +1,10 @@
 import {LitElement, html, css} from 'lit';
 import {Router} from '@vaadin/router';
-import './ShowNotification.js';
+import './NotificationMessage.js';
 import employeeService from '../services/employeeService.js';
 import { msg, updateWhenLocaleChanges } from '@lit/localize';
 
-class EmployeeForm extends LitElement {
+export class EmployeeForm extends LitElement {
   static get properties() {
     return {
       employee: {type: Object},
@@ -193,42 +193,42 @@ class EmployeeForm extends LitElement {
             <input
               name="firstName"
               type="text"
-              .value="${this.employee.firstName || ''}"
+              value="${this.employee.firstName || ''}"
           /></label>
           <label
             >${msg('Last Name')}:
             <input
               name="lastName"
               type="text"
-              .value="${this.employee.lastName || ''}"
+              value="${this.employee.lastName || ''}"
           /></label>
           <label
             >${msg('Date of Employment')}:
             <input
               name="dateOfEmployment"
               type="date"
-              .value="${this.employee.dateOfEmployment || ''}"
+              value="${this.employee.dateOfEmployment || ''}"
           /></label>
           <label
             >${msg('Date of Birth')}:
             <input
               name="dateOfBirth"
               type="date"
-              .value="${this.employee.dateOfBirth || ''}"
+              value="${this.employee.dateOfBirth || ''}"
           /></label>
           <label
             >${msg('Phone')}:
             <input
               name="phone"
               type="text"
-              .value="${this.employee.phone || ''}"
+              value="${this.employee.phone || ''}"
           /></label>
           <label
             >${msg('Email')}:
             <input
               name="email"
               type="email"
-              .value="${this.employee.email || ''}"
+              value="${this.employee.email || ''}"
           /></label>
           <label
             >${msg('Department')}:
@@ -507,4 +507,4 @@ class EmployeeForm extends LitElement {
   `;
 }
 
-customElements.define('employee-form', EmployeeForm);
+window.customElements.define('employee-form', EmployeeForm);

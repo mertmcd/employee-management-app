@@ -2,7 +2,7 @@ import { LitElement, html, css } from 'lit';
 import { Router } from '@vaadin/router';
 import { msg, updateWhenLocaleChanges } from '@lit/localize';
 import {setLocale} from '../services/localization.js';
-class NavigationMenu extends LitElement {
+export class NavigationMenu extends LitElement {
 
   constructor() {
     super();
@@ -180,4 +180,4 @@ class NavigationMenu extends LitElement {
 `;
 }
 
-customElements.define('navigation-menu', NavigationMenu);
+window.customElements.define('navigation-menu', NavigationMenu);

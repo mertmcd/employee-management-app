@@ -1,10 +1,10 @@
 import {LitElement, html, css} from 'lit';
 import {Router} from '@vaadin/router';
-import './ShowNotification.js';
+import './NotificationMessage.js';
 import employeeService from '../services/employeeService.js';
 import { msg, updateWhenLocaleChanges } from '@lit/localize';
 
-class EmployeeList extends LitElement {
+export class EmployeeList extends LitElement {
   static get properties() {
     return {
       employees: {type: Array},
@@ -827,4 +827,4 @@ class EmployeeList extends LitElement {
   `;
 }
 
-customElements.define('employee-list', EmployeeList);
+window.customElements.define('employee-list', EmployeeList);
