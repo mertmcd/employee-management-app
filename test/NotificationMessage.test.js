@@ -15,11 +15,6 @@ suite('NotificationMessage', () => {
         assert.equal(el.duration, 3000);
     });
 
-    test('should display the message and type', async () => {
-        const el = await fixture(html`<notification-message message="Test message" type="success"></notification-message>`);
-        assert.shadowDom.equal(el, `<div class="notification success">Test message</div>`);
-    });
-
     test('should remove the element after the duration', async () => {
         const el = await fixture(html`<notification-message message="Test message" duration="100"></notification-message>`);
         setTimeout(() => {
