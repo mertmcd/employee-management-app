@@ -455,6 +455,7 @@ export class EmployeeList extends LitElement {
 
     .employee-list-container .switch-button-container {
       text-align: right;
+      margin: 0.5rem 0rem;
     }
 
     .employee-list-container .switch-button-container .switch-button {

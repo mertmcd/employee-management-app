@@ -119,8 +119,8 @@ export class NavigationMenu extends LitElement {
   select {
     background-color: var(--primary-white-color);
     color: var(--primary-orange-color);
-    padding: 5px;
-    font-size: 14px;
+    padding: 0.25rem;
+    font-size: 0.875rem;
     border: 1px solid var(--primary-orange-color);
   }
 
@@ -167,7 +167,7 @@ export class NavigationMenu extends LitElement {
     select {
       width: 100%;
       padding: 8px;
-      font-size: 16px;
+      font-size: 0.75rem;
     }
 
     .left-container .desktop-logo {
